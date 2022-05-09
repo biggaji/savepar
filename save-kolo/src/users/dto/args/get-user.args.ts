@@ -1,0 +1,10 @@
+import { ArgsType, Field } from '@nestjs/graphql';
+import { IsNotEmpty } from 'class-validator';
+
+/* eslint-disable  */
+@ArgsType()
+export class GetUserArgs {
+    @Field()
+    @IsNotEmpty()
+    id:string
+}
