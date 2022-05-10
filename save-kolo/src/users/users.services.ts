@@ -1,22 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { UserType } from './models/user';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { userSignUpInput } from './dto/user.input';
+import { UserType } from './entities/user.entity';
 
 /* eslint-disable */
 @Injectable()
 export class UserService {
-    private users:UserType[] = [];
+    constructor(
+        @InjectRepository(UserType)
+        private userRepository: Repository<UserType>,
+    ) {}
 
-    createUser(): UserType {
-        return
+    async createUser(args: userSignUpInput): Promise<UserType> {
+        let createUser = await this.userRepository.create(args);
+        return this.userRepository.save(createUser);
     }
 
-    fetchUser(): UserType {
-        return
+    async fetchUser(id: string ): Promise<UserType> {
+        let user = await this.userRepository.findOneBy({ id: id});
+        return user;
     }
 
-    updateUser(): UserType {
-        return
+    async fetchByUserName(username: string): Promise<UserType> {
+        return await this.userRepository.findOneBy({ username: username });
     }
+
+    async fetchAllUsers(): Promise<UserType[]> {
+        let users = await this.userRepository.find();
+        return users;
+    }
+
+    // async updateUserByUserName(username:string): Promise<UserType> {
+    //     let updatedUser 
+    //     return this.userRepository.update()
+    // }
 
     deleteUser(): boolean {
         return 
